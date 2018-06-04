@@ -3,16 +3,7 @@
 import argh
 import json
 
-#!!! This is a hack to allow testing of this CLT without
-#!!! re-installing great_expectations every time there's an edit
-import sys
-import os
-import os.path
-
-dir_path = os.path.dirname(os.path.realpath(__file__))
-sys.path.append(dir_path+'/..')
-
-import great_expectations as ge
+from great_expectations import dataset, read_csv
 
 
 def initialize():
@@ -42,9 +33,9 @@ def validate(data_set, expectations_config_file, **kwargs):
         dataset_class = getattr(custom_module, kwargs["custom_dataset_class"])
 
     else:
-        dataset_class = ge.dataset.PandasDataset
+        dataset_class = dataset.PandasDataset
 
-    df = ge.read_csv(data_set, expectations_config=expectations_config, dataset_class=dataset_class)
+    df = read_csv(data_set, expectations_config=expectations_config, dataset_class=dataset_class)
 
     result = df.validate(
         evaluation_parameters=evaluation_parameters,
